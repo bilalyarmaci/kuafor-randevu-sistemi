@@ -1,48 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;700&display=swap');
 
-*{
+* {
     box-sizing: border-box;
 }
 
-body{
+body {
     font-family: 'Fira Sans', sans-serif;
     margin: 1rem 0 0;
     text-align: center;
 }
 
-h1{
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-block: 2rem;
-}
-
-a{
+a {
     text-decoration: none;
     color: rgb(255, 255, 255);
 }
 
-.navigation{
+.navigation {
     background-color: rgb(94, 94, 94);
-    margin: 0;
     width: clamp(300px, 300px + 20vw, 1000px);
     padding: 3rem;
 }
-.navigation li{
-    margin: 0;
+
+.navigation li {
     list-style: none;
     display: block;
     padding: 0.5rem;
     font-size: clamp(1rem, 1rem + 1vw, 3rem);
 }
 
-.navigation li:hover{
+.navigation li:hover {
     background-color: rgb(255, 255, 255);
     color: rgb(94, 94, 94);
     cursor: pointer;
     transition: all ease-in-out 0.3s;
-}    
+}
 
-.navigation li:hover a{
+.navigation li:hover a {
     color: rgb(94, 94, 94);
-    transition: all ease-in-out 0.3s; 
+    transition: all ease-in-out 0.3s;
 }
