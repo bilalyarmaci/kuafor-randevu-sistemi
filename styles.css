@@ -6,30 +6,43 @@
 
 body{
     font-family: 'Fira Sans', sans-serif;
-    margin: 0;
+    margin: 1rem 0 0;
+    text-align: center;
 }
 
-.sidenav{
-    height: 100%;
-    width: 170px;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: #111;
-    overflow-x: hidden;
-    padding-top: 20px;
+h1{
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-block: 2rem;
 }
 
-.sidenav a{
-    color: #ddd;
-    display: block;
-    padding: 16px;
+a{
     text-decoration: none;
-    transition: all ease-in-out 0.3s;
+    color: rgb(255, 255, 255);
 }
 
-.sidenav a:hover{
-    background-color: #ddd;
-    color: black;
+.navigation{
+    background-color: rgb(94, 94, 94);
+    margin: 0;
+    width: clamp(300px, 300px + 20vw, 1000px);
+    padding: 3rem;
+}
+.navigation li{
+    margin: 0;
+    list-style: none;
+    display: block;
+    padding: 0.5rem;
+    font-size: clamp(1rem, 1rem + 1vw, 3rem);
+}
+
+.navigation li:hover{
+    background-color: rgb(255, 255, 255);
+    color: rgb(94, 94, 94);
+    cursor: pointer;
+    transition: all ease-in-out 0.3s;
+}    
+
+.navigation li:hover a{
+    color: rgb(94, 94, 94);
+    transition: all ease-in-out 0.3s; 
 }
