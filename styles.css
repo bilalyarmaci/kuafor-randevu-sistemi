@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;700&display=swap');
+
+*{
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Fira Sans', sans-serif;
+    margin: 0;
+}
+
+.sidenav{
+    height: 100%;
+    width: 170px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidenav a{
+    color: #ddd;
+    display: block;
+    padding: 16px;
+    text-decoration: none;
+    transition: all ease-in-out 0.3s;
+}
+
+.sidenav a:hover{
+    background-color: #ddd;
+    color: black;
+}
