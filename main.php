@@ -20,6 +20,14 @@ include_once './header.php';
     ?>
 </ul>
 
+<?php
+if(isset($_GET["error"])){
+    if($_GET["error"] === 'stmtfail'){
+        echo '<div class="m-5"><span class="p-4 bg-danger card fs-1 d-inline text-dark fw-bold">Failed to ceonnect to the database!</span></div>';
+    }
+}
+?>
+
 
 <button onclick="window.location.href='https://github.com/bilalyarmaci/kuafor-randevu-sistemi'" type="button" class="btn btn-lg btn-outline-dark position-absolute bottom-0 translate-middle">
     <i class="bi bi-github"></i> Github Kaynak Kodu
