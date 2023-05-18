@@ -16,28 +16,45 @@ include_once './header.php'
 
                                 <form action="includes/signin-inc.php" method="post">
 
+                                    <?php
+                                    if (isset($_GET["error"])) {
+                                        if ($_GET["error"] == "none") {
+                                            echo '<h2 class="text-success fs-1 fw-bold">Kayıt başarılı!</h2>';
+                                        }
+                                    }
+                                    ?>
+
                                     <h2 class="fw-bold mb-3 pb-3" style="letter-spacing: 1px;">Giriş Yap</h2>
 
                                     <div class="form-outline mb-4">
                                         <label class="form-label d-block text-start" for="mail">
-                                        <i class="bi bi-envelope-at me-2"></i>
+                                            <i class="bi bi-envelope-at me-2"></i>
                                             Email</label>
-                                        <input type="email" id="mail" class="form-control form-control-lg" placeholder="Email adresinizi girin"/>
+                                        <input type="email" id="mail" class="form-control form-control-lg" placeholder="Email adresinizi girin" name="email" required />
                                     </div>
 
                                     <div class="form-outline mb-4">
                                         <label class="form-label d-block text-start" for="pass">
-                                        <i class="bi bi-key me-2"></i>
+                                            <i class="bi bi-key me-2"></i>
                                             Şifre</label>
-                                        <input type="password" id="pass" class="form-control form-control-lg" placeholder="Şifrenizi girin"/>
+                                        <input type="password" id="pass" class="form-control form-control-lg" placeholder="Şifrenizi girin" name="password" required />
                                     </div>
 
-                                    <div class="pt-1 mb-4">
-                                        <button class="btn btn-dark btn-lg btn-block" type="submit">Giriş Yap</button>
+                                    <div class="container d-grid gap-3 pt-1 mb-4 d-md-block">
+                                        <button class="btn btn-outline-dark btn-lg order-last me-md-3" onclick="window.location.href='./main.php'">Geri</button>
+                                        <button class="btn btn-dark btn-lg" type="submit" name="submit">Giriş Yap</button>
                                     </div>
 
                                     <p class="mb-5 pb-lg-2" style="color: #393f81;">Hesabınız yok mu? <a href="signup.php" style="color: #393f81;"><b>Buradan kaydolun</b></a></p>
-
+                                    <?php
+                                    if (isset($_GET["error"])) {
+                                        if ($_GET["error"] == "nosuchuser") {
+                                            echo '<h5 class="text-danger m-0 fw-bold">Böyle bir kullanıcı yok.</h5>';
+                                        } else if ($_GET["error"] == "wrongpassword") {
+                                            echo '<h5 class="text-danger m-0 fw-bold">Şifrenizin doğru olduğundan emin olun.</h5>';
+                                        }
+                                    }
+                                    ?>
                                 </form>
 
                             </div>
