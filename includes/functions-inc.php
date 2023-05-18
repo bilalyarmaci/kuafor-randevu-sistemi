@@ -1,5 +1,5 @@
 <?php
-include_once './dbConnection-inc.php';
+include_once 'dbConnection-inc.php';
 
 // Formdaki girişler boş mu kontrolü
 function isEmptyInput($uName, $uEmail, $uPwd, $uPwdRpt){
@@ -35,6 +35,7 @@ function emailExists($connection, $uEmail){
     
     // Eğer bir bilgi dönmüş ise kullanıcı bilgisidir, dolayısıyla zaten veritabanında vardır
     if($row = mysqli_fetch_assoc($resultData)){
+        mysqli_stmt_close($stmt);
         return $row;
     } else {
         // Müşteri değilse yönetici (admin) giriş yapıyor olabilir.
@@ -51,13 +52,13 @@ function emailExists($connection, $uEmail){
         $resultAdminData = mysqli_stmt_get_result($stmt);
         // Eğer bilgi dönmüş ise yönetici bilgisidir
         if($rowAdmin = mysqli_fetch_assoc($resultAdminData)){
+            mysqli_stmt_close($stmt);
             return $rowAdmin;
         } else {
+            mysqli_stmt_close($stmt);
             return false;
         }
     }
-
-    mysqli_stmt_close($stmt);
 }
 
 // Veritabanı kullanıcı kaydı
@@ -66,7 +67,7 @@ function createUser($connection, $uName, $uSurname, $uEmail, $uPwd){
     // Şifreleme (hash) işlemi
     $hashedPwd = password_hash($uPwd, PASSWORD_DEFAULT);
     // 'SQL injection' koruması için 'prepared statement' kullanımı
-    $sql = "INSERT INTO `musteriler` (`ad_soyad`,`email`,`sifre`) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO `musteriler` (`ad_soyad`,`email`,`sifre`) VALUES (?, ?, ?);";
     $stmt = mysqli_stmt_init($connection);
 
     if(!mysqli_stmt_prepare($stmt,$sql)){
@@ -103,26 +104,26 @@ function signinUser($connection, $uEmail, $uPwd){
         if(isset($emailExists["musteriID"])){   // Giriş yapan müşteriyse
             session_start();
             $_SESSION["userID"] = $emailExists["musteriID"];
-            header("Location: ../main.php");
+            header("Location: ../index.php");
             exit();
         } else if(isset($emailExists["yoneticiID"])){   // Giriş yapan yöneticiyse
             session_start();
             $_SESSION["adminID"] = $emailExists["yoneticiID"];
-            header("Location: ../main.php");
+            header("Location: ../index.php");
             exit();
         }
         
     }
 }
 
-// Başkasına ait randevu var mı kontrolü
+// Başkasına ait randevu var mı kontrolü. Varsa o randevu döndürülür.
 function isApptTaken($connection, $date, $time){
     // 'SQL injection' koruması için 'prepared statement' kullanımı
-    $sql = "SELECT * FROM `randevular` WHERE `tarih` = ? AND `saat` = ?";
+    $sql = "SELECT * FROM `randevular` WHERE `tarih` = ? AND `saat` = ?;";
     $stmt = mysqli_stmt_init($connection);
 
     if(!mysqli_stmt_prepare($stmt,$sql)){
-        header("Location: ../main.php?error=stmtfail");
+        header("Location: ../index.php?error=stmtfail");
         exit();
     }
 
@@ -130,23 +131,23 @@ function isApptTaken($connection, $date, $time){
     mysqli_stmt_execute($stmt);
     $resultData = mysqli_stmt_get_result($stmt);
     
-    if($row = mysqli_fetch_assoc($resultData)){
-        return $row;
+    if(mysqli_fetch_assoc($resultData)){
+        mysqli_stmt_close($stmt);
+        return true;
     } else {
+        mysqli_stmt_close($stmt);
         return false;
     }
-
-    mysqli_stmt_close($stmt);
 }
 
 // Veritabanı randevu kaydı
-function saveAppt($connection, $uID, $date, $time){
+function makeAppt($connection, $uID, $date, $time){
     // 'SQL injection' koruması için 'prepared statement' kullanımı
-    $sql = "INSERT INTO `randevular` (`musteriID`,`tarih`,`saat`) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO `randevular` (`musteriID`,`tarih`,`saat`) VALUES (?, ?, ?);";
     $stmt = mysqli_stmt_init($connection);
 
     if(!mysqli_stmt_prepare($stmt,$sql)){
-        header("Location: ../main.php?error=stmtfail");
+        header("Location: ../index.php?error=stmtfail");
         exit();
     }
 
@@ -154,6 +155,42 @@ function saveAppt($connection, $uID, $date, $time){
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
-    header("Location: ../appt.php?error=none");
+    header("Location: ../makeAppt.php?error=none");
     exit();
+}
+
+// Müşterinin ID'sine denk gelen randevuların çekilmesi
+function getAppt($connection, $uID){
+    $sql = "SELECT `randevular`.`randevuID`, `randevular`.`tarih`, `randevular`.`saat`, `musteriler`.`ad_soyad`
+            FROM `randevular`
+            INNER JOIN `musteriler` ON `randevular`.`musteriID` = `musteriler`.`musteriID`
+            WHERE `randevular`.`musteriID` = $uID
+            ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC;";
+
+    $response = mysqli_query($connection, $sql);
+
+    if(!$response ){
+        header("Location: ../index.php?error=stmtfail");
+        exit();
+    }
+  
+    mysqli_close($connection);
+    return $response;
+}
+
+// Tüm randevuların çekilmesi
+function getAppts($connection){
+    $sql = "SELECT `randevular`.`randevuID`, `randevular`.`tarih`, `randevular`.`saat`, `musteriler`.`ad_soyad`
+            FROM `randevular`
+            INNER JOIN `musteriler` ON `randevular`.`musteriID` = `musteriler`.`musteriID`
+            ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC ;";
+    $response = mysqli_query($connection, $sql);
+
+    if(!$response ){
+        header("Location: ../index.php?error=stmtfail");
+        exit();
+    }
+  
+    mysqli_close($connection);
+    return $response;
 }
