@@ -23,7 +23,7 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
             <div class="bg-blur col col-10 col-lg-6 text-center card p-5 rounded-5">
                 <h2 class="fw-bold mb-4 fs-1 text-white">Randevu Oluştur</h2>
 
-                <form action="./includes/appt-inc.php" method="GET">
+                <form action="./includes/appt-inc.php" method="POST">
                     <div class="card fs-2 px-5 rounded-3">
                         <label for="date">Tarih:</label>
                         <input type="date" id="date" name="date" required><br>
@@ -37,6 +37,18 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
                         <button class="btn btn-outline-light btn-lg order-last me-md-3" onclick="window.location.href='./main.php'">Geri</button>
                         <button class="btn btn-light btn-lg" type="submit" name="submit">Randevu Al</button>
                     </div>
+                    <?php
+                    if(isset($_GET["error"])){
+                        if($_GET["error"] === 'appttaken'){
+                            echo '<div class="bg-light mt-3 rounded p-3"><span class="fs-4 text-danger"><i class="bi bi-x-circle-fill"></i> Bu tarihte başka birinin randevusu bulunmakta. Lütfen başka bir tarih/saat seçiniz.</span></div>';
+                        } else if($_GET["error"] === 'none'){
+                            echo '<div class="bg-light mt-3 rounded p-3"><span class="fs-4 text-success"><i class="bi bi-check-circle-fill"></i> Randevu başarıyla oluşturuldu.</span></div>';
+                        } else if($_GET["error"] === 'noadmappt'){
+                            echo '<div class="bg-light mt-3 rounded p-3"><span class="fs-4 text-warning"><i class="bi bi-exclamation-circle-fill"></i> Yönetici hesapla randevu oluşturulamaz.</span></div>';
+                        }
+                    }
+                    ?>
+                    
                 </form>
 
                 <datalist id="time_list">
