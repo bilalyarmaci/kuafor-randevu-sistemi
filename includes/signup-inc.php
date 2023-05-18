@@ -1,7 +1,7 @@
 <?php
 require_once './functions-inc.php';
 
-if(!isset($_POST["submit"])){
+if(!isset($_POST["email"])){
     header("Location: ../signup.php");
     exit();
 }

@@ -1,7 +1,7 @@
 <?php
 include_once './functions-inc.php';
 
-if (!isset($_POST["submit"])) {
+if (!isset($_POST["email"])) {
     header("Location: ../signin.php");
     exit();
 }
