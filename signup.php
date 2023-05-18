@@ -1,5 +1,9 @@
 <?php
 include_once './header.php';
+if(isset($_SESSION["userID"])||isset($_SESSION["adminID"])){
+    header("Location: ./main.php");
+    exit();
+}
 ?>
 <!-- Section: Design Block -->
 <style>
@@ -27,7 +31,7 @@ include_once './header.php';
             backdrop-filter: blur(30px);
             ">
                 <div class="card-body p-5 shadow-5 text-center">
-                    <h2 class="fw-bold mb-5">Kayıt Ol</h2>
+                    <h2 class="fw-bold mb-5">Kaydol</h2>
                     <form action="./includes/signup-inc.php" method="post">
                         <!-- 2 column grid layout with text inputs for the first and last names -->
                         <div class="row">
@@ -69,9 +73,11 @@ include_once './header.php';
                         </div>
 
                         <!-- Submit button -->
-                        <button type="submit" class="btn btn-lg btn-dark btn-block mb-4" name="submit">
-                            Kayıt ol
-                        </button>
+                        <div class="container d-grid gap-3 pt-1 mb-4 d-md-block">
+                            <button class="btn btn-outline-dark btn-lg order-last me-md-3" onclick="window.location.href='./main.php'">Geri</button>
+                            <button class="btn btn-dark btn-lg" type="submit" name="submit">Kaydol</button>
+                        </div>
+
                     </form>
                     <!-- Hata oluşması halinde gerekli mesaj kullanıcıya iletilmekte -->
                     <?php
