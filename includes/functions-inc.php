@@ -1,6 +1,7 @@
 <?php
 include_once './dbConnection-inc.php';
 
+// Formdaki girişler boş mu kontrolü
 function isEmptyInput($uName, $uEmail, $uPwd, $uPwdRpt){
     if(empty($uName) || empty($uEmail) || empty($uPwd) || empty($uPwdRpt)){
         return true;
@@ -9,6 +10,7 @@ function isEmptyInput($uName, $uEmail, $uPwd, $uPwdRpt){
     }
 }
 
+// İki şifre de aynı mı kontrolü
 function noPwdsMatch($uPwd, $uPwdRpt){
     if($uPwd !== $uPwdRpt){
         return true;
@@ -16,6 +18,7 @@ function noPwdsMatch($uPwd, $uPwdRpt){
     return false;
 }
 
+// Aynı mail ile kullanıcı var mı kontrolü
 function emailExists($connection, $uEmail){
     // 'SQL injection' koruması için 'prepared statement' kullanımı
     $sql = "SELECT * FROM `musteriler` WHERE `email` = ?";
@@ -57,6 +60,7 @@ function emailExists($connection, $uEmail){
     mysqli_stmt_close($stmt);
 }
 
+// Veritabanı kullanıcı kaydı
 function createUser($connection, $uName, $uSurname, $uEmail, $uPwd){
     $ad_soyad = $uName . " " . $uSurname;
     // Şifreleme (hash) işlemi
@@ -78,6 +82,7 @@ function createUser($connection, $uName, $uSurname, $uEmail, $uPwd){
     exit();
 }
 
+// Kullanıcı girişi
 function signinUser($connection, $uEmail, $uPwd){
     // Email kontrolü. Email bulunursa ilişkisel olarak geri döndürülür ve değişkene atanır.
     $emailExists = emailExists($connection, $uEmail);
@@ -108,4 +113,47 @@ function signinUser($connection, $uEmail, $uPwd){
         }
         
     }
+}
+
+// Başkasına ait randevu var mı kontrolü
+function isApptTaken($connection, $date, $time){
+    // 'SQL injection' koruması için 'prepared statement' kullanımı
+    $sql = "SELECT * FROM `randevular` WHERE `tarih` = ? AND `saat` = ?";
+    $stmt = mysqli_stmt_init($connection);
+
+    if(!mysqli_stmt_prepare($stmt,$sql)){
+        header("Location: ../main.php?error=stmtfail");
+        exit();
+    }
+
+    mysqli_stmt_bind_param($stmt, "ss", $date, $time);
+    mysqli_stmt_execute($stmt);
+    $resultData = mysqli_stmt_get_result($stmt);
+    
+    if($row = mysqli_fetch_assoc($resultData)){
+        return $row;
+    } else {
+        return false;
+    }
+
+    mysqli_stmt_close($stmt);
+}
+
+// Veritabanı randevu kaydı
+function saveAppt($connection, $uID, $date, $time){
+    // 'SQL injection' koruması için 'prepared statement' kullanımı
+    $sql = "INSERT INTO `randevular` (`musteriID`,`tarih`,`saat`) VALUES (?, ?, ?)";
+    $stmt = mysqli_stmt_init($connection);
+
+    if(!mysqli_stmt_prepare($stmt,$sql)){
+        header("Location: ../main.php?error=stmtfail");
+        exit();
+    }
+
+    mysqli_stmt_bind_param($stmt, "sss", $uID, $date, $time);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+
+    header("Location: ../appt.php?error=none");
+    exit();
 }
