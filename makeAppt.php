@@ -21,8 +21,15 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="bg-blur col col-10 col-lg-6 text-center card p-5 rounded-5">
-                <h2 class="fw-bold mb-4 fs-1 text-white">Randevu Oluştur</h2>
-
+                <?php
+                if (isset($_GET["updateID"]) && isset($_GET["date"]) && isset($_GET["time"])) {
+                    echo '<div class="bg-light mb-3 rounded p-3"><span class="fs-4 fw-bold text-warning">
+                    ' . $_GET["date"] . ' ' . $_GET["time"] . '
+                    tarihi yerine seçim yapın </span></div>';
+                } else {
+                    echo '<h2 class="fw-bold mb-4 fs-1 text-white">Randevu Oluştur</h2>';
+                }
+                ?>
                 <form action="./includes/makeAppt-inc.php" method="POST">
                     <div class="card fs-2 px-5 rounded-3">
                         <label for="date">Tarih:</label>
@@ -35,21 +42,33 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
                     </div>
                     <div class="container d-grid gap-3 pt-1 mt-4 d-md-block">
                         <button class="btn btn-outline-light btn-lg order-last me-md-3" onclick="window.location.href='./index.php'">Geri</button>
-                        <button class="btn btn-light btn-lg" type="submit" name="submit">Randevu Al</button>
+                        <?php
+                        if (isset($_GET["updateID"]) && isset($_GET["date"]) && isset($_GET["time"])) {
+                            echo '<input type="hidden" name="type" value="update">';
+                            echo '<input type="hidden" name="updateID" value="' . $_GET["updateID"] . '">';
+                            echo '<button class="btn btn-warning btn-lg fw-bold" type="submit" name="submit">Güncelle</button>';
+                        } else {
+                            echo '<button class="btn btn-light btn-lg" type="submit" name="submit">Randevu Al</button>';
+                        }
+                        ?>
                     </div>
                     <!-- Hata kontrolleri -->
                     <?php
-                    if(isset($_GET["error"])){
-                        if($_GET["error"] === 'appttaken'){
+                    if (isset($_GET["error"])) {
+                        if ($_GET["error"] === 'appttaken') {
                             echo '<div class="bg-light mt-3 rounded p-3"><span class="fs-4 text-danger"><i class="bi bi-x-circle-fill"></i> Bu tarihte başka birinin randevusu bulunmakta. Lütfen başka bir tarih/saat seçiniz.</span></div>';
-                        } else if($_GET["error"] === 'none'){
+                        } else if ($_GET["error"] === 'none') {
                             echo '<div class="bg-light mt-3 rounded p-3"><span class="fs-4 text-success"><i class="bi bi-check-circle-fill"></i> Randevu başarıyla oluşturuldu.</span></div>';
-                        } else if($_GET["error"] === 'noadmappt'){
+                        } else if ($_GET["error"] === 'succapptupdt') {
+                            echo '<div class="bg-light mt-3 rounded p-3"><span class="fs-4 text-success"><i class="bi bi-check-circle-fill"></i> Randevu başarıyla güncellendi.</span></div>';
+                        } else if ($_GET["error"] === 'pastdate') {
+                            echo '<div class="bg-light mt-3 rounded p-3"><span class="fs-4 text-warning"><i class="bi bi-exclamation-circle-fill"></i> Geçmiş zaman seçilemez.</span></div>';
+                        } else if ($_GET["error"] === 'noadmappt') {
                             echo '<div class="bg-light mt-3 rounded p-3"><span class="fs-4 text-warning"><i class="bi bi-exclamation-circle-fill"></i> Yönetici hesapla randevu oluşturulamaz.</span></div>';
                         }
                     }
                     ?>
-                    
+
                 </form>
 
                 <datalist id="time_list">
@@ -83,8 +102,16 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
 
 <script>
     // Sadece bu günden itibaren 30 gün seçilebilir
+    const options = {
+        timeZone: 'Europe/Istanbul'
+    };
+    const formatter = new Intl.DateTimeFormat(undefined, options);
+
+    // Türkiye tarihi
+    const TR_DATE = new Date();
+
     const date = new Date();
-    let currentDate = date.toJSON();
+    let currentDate = TR_DATE.toJSON();
     let todaysDate = currentDate.slice(0, 10);
     let maxDate = new Date(new Date().setDate(new Date().getDate() + 30)).toJSON();
     let latterDate = maxDate.slice(0, 10);
