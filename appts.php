@@ -7,6 +7,17 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
     exit();
 }
 ?>
+<script>
+    let id;
+    function getID(inID) {
+        id = inID;
+    }
+    function approve(response) {
+        if (response) {
+            window.location.href='./includes/deleteAppt-inc.php?deleteID=' + id;
+        }
+    }
+</script>
 
 <section class="intro">
     <div class="bg-image vh-100" style="background-color: #f5f7fa;">
@@ -36,14 +47,19 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
                                                 if ($_GET["error"] == "appttaken") {
                                                     echo '<div class="bg-danger text-center fw-bold p-3">
                                                     <p class="fs-2 mb-1 text-light"><i class="bi bi-x-circle-fill"></i> Bu tarihte başka randevu bulunmakta. </p>
-                                                    <button class="btn btn-light btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Dolu Randevuları Göster</button><br>
+                                                    <button class="btn btn-light btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#apptsModal">Dolu Randevuları Göster</button><br>
                                                     </div>';
                                                 } // Geçmiş tarih seçme durumu 
                                                 else if ($_GET["error"] == "pastdate") {
                                                     echo '<div class="bg-warning text-center fw-bold p-3">
                                                     <p class="fs-2 mb-1 text-light"><i class="bi bi-exclamation-circle-fill"></i> Geçmiş zaman seçilemez. </p>
                                                     </div>';
-                                                }
+                                                } 
+                                                else if ($_GET["error"] == "sccssfldelete") {
+                                                    echo '<div class="bg-success text-center fw-bold p-3">
+                                                    <p class="fs-2 fw-bold mb-1 text-light"><i class="bi bi-check-circle"></i> Randevu başarılıyla silindi. </p>
+                                                    </div>';
+                                                } 
                                             }
                                             // Görüntüleyen kullanıcıysa sadece kendi randevularını görebilmekte
                                             if (isset($_SESSION["userID"])) {
@@ -63,7 +79,7 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
                                                             '&date=' . $data["tarih"] .
                                                             '&time=' . $data["saat"] . '">
                                                         <i title="GÜNCELLE" class="m-1 bi bi-arrow-up-circle-fill text-success"></i></a> 
-                                                        <a href="./includes/deleteAppt.php?deleteID=' . $data["randevuID"] . '">
+                                                        <a href="" onclick="getID(' . $data["randevuID"] . ')" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                         <i title="SİL" class="m-1 bi bi-x-circle-fill text-danger"></i></a></td>';
                                                         $data = mysqli_fetch_assoc($response);
                                                     }
@@ -86,7 +102,7 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
                                                             '&date=' . $data["tarih"] .
                                                             '&time=' . $data["saat"] . '">
                                                         <i title="GÜNCELLE" class="m-1 bi bi-arrow-up-circle-fill text-success"></i></a> 
-                                                        <a href="./includes/deleteAppt.php?deleteID=' . $data["randevuID"] . '">
+                                                        <a href="" onclick="getID(' . $data["randevuID"] . ')" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                         <i title="SİL" class="m-1 bi bi-x-circle-fill text-danger"></i></a></td>';
                                                         $data = mysqli_fetch_assoc($response);
                                                     }
@@ -108,23 +124,22 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
     </div>
 </section>
 
-<!-- Tüm randevuların tarihlerini gösteren modal -->
-<div class="modal modal-sm fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<!---------------------------------- Tüm randevuların tarihlerini gösteren modal ---------------------------------->
+<div class="modal fade" id="apptsModal" tabindex="-1" aria-labelledby="apptsModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-info">
-                <h1 class="modal-title fs-5 fw-bold" id="staticBackdropLabel">Rezerve Edilenler</h1>
+                <h1 class="modal-title fs-5 fw-bold" id="apptsModal">Rezerve Edilenler</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <table class="table table-striped mb-0">
                     <!-- Tablo -->
                     <?php
-                    if(isset($_SESSION["userID"])){
+                    if (isset($_SESSION["userID"])||isset($_SESSION["adminID"])) {
+                        // Kullanıcıya sadece tarih ve saat paylaşılır.
                         $cevap = getAppts($connection, false);
-                    } else if(isset($_SESSION["adminID"])){
-                        $cevap = getAppts($connection, true);
-                    }
+                    } 
                     if (mysqli_num_rows($cevap) == 0) {
                         echo '<tr><td class="p-3 text-dark fw-bold fs-4" colspan="4">Herhangi bir veri bulunmamakta.</td></tr>';
                     } else {
@@ -145,6 +160,26 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
     </div>
 </div>
 
+<!---------------------------------- Silme onay modali ---------------------------------->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h1 class="modal-title text-light fw-bold fs-5" id="staticBackdropLabel"><i class="bi bi-exclamation-circle-fill"></i> DİKKAT</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body fw-bold">
+                Randevuyu silmek istediğinize emin misiniz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">KAPAT</button>
+                <button onclick="approve(true)" type="button" class="btn btn-outline-danger">SİL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php
 include_once './footer.php';
+mysqli_close($connection);
 ?>
