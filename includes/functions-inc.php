@@ -127,7 +127,6 @@ function signinUser($connection, $uEmail, $uPwd)
 // Başkasına ait randevu var mı kontrolü. Varsa o randevu döndürülür.
 function isApptTaken($connection, $date, $time)
 {
-    // 'SQL injection' koruması için 'prepared statement' kullanımı
     $sql = "SELECT * FROM `randevular` WHERE `tarih` = ? AND `saat` = ?;";
     $stmt = mysqli_stmt_init($connection);
 
@@ -152,7 +151,6 @@ function isApptTaken($connection, $date, $time)
 // Veritabanı randevu kaydı
 function makeAppt($connection, $uID, $date, $time)
 {
-    // 'SQL injection' koruması için 'prepared statement' kullanımı
     $sql = "INSERT INTO `randevular` (`musteriID`,`tarih`,`saat`) VALUES (?, ?, ?);";
     $stmt = mysqli_stmt_init($connection);
 
@@ -172,7 +170,6 @@ function makeAppt($connection, $uID, $date, $time)
 // Veritabanı randevu güncellemesi
 function updateAppt($connection, $randevuID, $date, $time)
 {
-    // 'SQL injection' koruması için 'prepared statement' kullanımı
     $sql = "UPDATE `randevular` SET `tarih` = ?,`saat` = ?
     WHERE `randevular`.`randevuID` = $randevuID;";
     $stmt = mysqli_stmt_init($connection);
@@ -194,19 +191,24 @@ function updateAppt($connection, $randevuID, $date, $time)
 function getAppt($connection, $uID)
 {
     $sql = "SELECT `randevular`.`randevuID`, `randevular`.`tarih`, `randevular`.`saat`, `musteriler`.`ad_soyad`
-            FROM `randevular`
-            INNER JOIN `musteriler` ON `randevular`.`musteriID` = `musteriler`.`musteriID`
-            WHERE `randevular`.`musteriID` = $uID AND `randevular`.`tarih` >= `" . date('Y-m-d') . "`
-            ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC;";
+        FROM `randevular`
+        INNER JOIN `musteriler` ON `randevular`.`musteriID` = `musteriler`.`musteriID`
+        WHERE `randevular`.`musteriID` = ? AND `randevular`.`tarih` >= ?
+        ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC;";
 
-    $response = mysqli_query($connection, $sql);
+    $stmt = mysqli_prepare($connection, $sql);
+    $currentDate = date('Y-m-d');
+    mysqli_stmt_bind_param($stmt, "ss", $uID, $currentDate);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-    if (!$response) {
+    if (!$result) {
         header("Location: ../index.php?error=stmtfail");
         exit();
     }
 
-    return $response;
+    mysqli_stmt_close($stmt);
+    return $result;
 }
 
 // Tüm randevuların çekilmesi
@@ -217,22 +219,55 @@ function getAppts($connection, $prevAppts)
         $sql = "SELECT `randevular`.`randevuID`, `randevular`.`tarih`, `randevular`.`saat`, `musteriler`.`ad_soyad`
         FROM `randevular`
         INNER JOIN `musteriler` ON `randevular`.`musteriID` = `musteriler`.`musteriID`
-        WHERE `randevular`.`tarih` >=`" . date('Y-m-d') . "`
-        ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC ;";
+        WHERE `randevular`.`tarih` >= ?
+        ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC";
     } else {
         $sql = "SELECT `randevular`.`randevuID`, `randevular`.`tarih`, `randevular`.`saat`, `musteriler`.`ad_soyad`
         FROM `randevular`
         INNER JOIN `musteriler` ON `randevular`.`musteriID` = `musteriler`.`musteriID`
-        ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC ;";
+        ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC";
     }
 
-    $response = mysqli_query($connection, $sql);
+    $stmt = mysqli_prepare($connection, $sql);
+
+    if ($prevAppts == false) {
+        $currentDate = date('Y-m-d');
+        mysqli_stmt_bind_param($stmt, "s", $currentDate);
+    }
+
+    mysqli_stmt_execute($stmt);
+    $response = mysqli_stmt_get_result($stmt);
 
     if (!$response) {
         header("Location: ../index.php?error=stmtfail");
         exit();
     }
 
+    mysqli_stmt_close($stmt);
     return $response;
-    mysqli_close($connection);
+}
+
+
+function deleteAppt($connection, $apptID)
+{
+    $sql = "DELETE FROM `randevular` WHERE `randevular`.`randevuID` = ?";
+    $stmt = mysqli_prepare($connection, $sql);
+
+    if (!$stmt) {
+        header("Location: ../index.php?error=stmtfail");
+        exit();
+    }
+
+    mysqli_stmt_bind_param($stmt, "i", $apptID);
+    $result = mysqli_stmt_execute($stmt);
+
+    if (!$result) {
+        header("Location: ../index.php?error=stmtfail");
+        exit();
+    }
+
+    mysqli_stmt_close($stmt);
+
+    header("Location: ../appts.php?error=sccssfldelete");
+    exit();
 }
