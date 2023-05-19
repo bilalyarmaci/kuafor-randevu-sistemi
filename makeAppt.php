@@ -1,5 +1,6 @@
 <?php
 include_once './header.php';
+include_once './includes/functions-inc.php';
 
 if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
     header("Location: ./signin.php");
@@ -23,6 +24,11 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
             <div class="bg-blur col col-10 col-lg-6 text-center card p-5 rounded-5">
                 <?php
                 if (isset($_GET["updateID"]) && isset($_GET["date"]) && isset($_GET["time"])) {
+                    // Geçmiş tarih güncellenemez.
+                    if ($_GET["date"] <= date('Y-m-d') && $_GET["time"] <= $TR_Time || $_GET["date"] < date('Y-m-d')) {
+                        header("Location: ./appts.php?error=pastdate");
+                        exit();
+                    }
                     echo '<div class="bg-light mb-3 rounded p-3"><span class="fs-4 fw-bold text-warning">
                     ' . $_GET["date"] . ' ' . $_GET["time"] . '
                     tarihi yerine seçim yapın </span></div>';
@@ -56,7 +62,8 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
                     <?php
                     if (isset($_GET["error"])) {
                         if ($_GET["error"] === 'appttaken') {
-                            echo '<div class="bg-light mt-3 rounded p-3"><span class="fs-4 text-danger"><i class="bi bi-x-circle-fill"></i> Bu tarihte başka birinin randevusu bulunmakta. Lütfen başka bir tarih/saat seçiniz.</span></div>';
+                            header("Location: ./appts.php?error=appttaken");
+                            exit();
                         } else if ($_GET["error"] === 'none') {
                             echo '<div class="bg-light mt-3 rounded p-3"><span class="fs-4 text-success"><i class="bi bi-check-circle-fill"></i> Randevu başarıyla oluşturuldu.</span></div>';
                         } else if ($_GET["error"] === 'succapptupdt') {
