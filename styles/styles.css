@@ -19,8 +19,8 @@ a {
 }
 
 .navigation {
-    background-color: rgb(94, 94, 94);
-    width: clamp(300px, 300px + 20vw, 1000px);
+    background-color: #654236;
+    width: clamp(150px, 150px + 20vw, 1000px);
     padding: 3rem;
 }
 
@@ -33,12 +33,12 @@ a {
 
 .navigation li:hover {
     background-color: rgb(255, 255, 255);
-    color: rgb(94, 94, 94);
+    color: #654236;
     cursor: pointer;
     transition: all ease-in-out 0.3s;
 }
 
 .navigation li:hover a {
-    color: rgb(94, 94, 94);
+    color: #654236;
     transition: all ease-in-out 0.3s;
 }

@@ -1,7 +1,7 @@
 <?php
 include_once './header.php';
 if(isset($_SESSION["userID"])||isset($_SESSION["adminID"])){
-    header("Location: ./main.php");
+    header("Location: ./index.php");
     exit();
 }
 ?>
@@ -74,7 +74,7 @@ if(isset($_SESSION["userID"])||isset($_SESSION["adminID"])){
 
                         <!-- Submit button -->
                         <div class="container d-grid gap-3 pt-1 mb-4 d-md-block">
-                            <button class="btn btn-outline-dark btn-lg order-last me-md-3" onclick="window.location.href='./main.php'">Geri</button>
+                            <button class="btn btn-outline-dark btn-lg order-last me-md-3" onclick="window.location.href='./index.php'">Geri</button>
                             <button class="btn btn-dark btn-lg" type="submit" name="submit">Kaydol</button>
                         </div>
 
