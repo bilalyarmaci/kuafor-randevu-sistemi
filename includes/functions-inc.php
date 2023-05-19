@@ -196,7 +196,7 @@ function getAppt($connection, $uID)
     $sql = "SELECT `randevular`.`randevuID`, `randevular`.`tarih`, `randevular`.`saat`, `musteriler`.`ad_soyad`
             FROM `randevular`
             INNER JOIN `musteriler` ON `randevular`.`musteriID` = `musteriler`.`musteriID`
-            WHERE `randevular`.`musteriID` = $uID AND `randevular`.`tarih` >= date('Y-m-d')
+            WHERE `randevular`.`musteriID` = $uID AND `randevular`.`tarih` >= `" . date('Y-m-d') . "`
             ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC;";
 
     $response = mysqli_query($connection, $sql);
@@ -210,12 +210,22 @@ function getAppt($connection, $uID)
 }
 
 // Tüm randevuların çekilmesi
-function getAppts($connection)
+function getAppts($connection, $prevAppts)
 {
-    $sql = "SELECT `randevular`.`randevuID`, `randevular`.`tarih`, `randevular`.`saat`, `musteriler`.`ad_soyad`
-            FROM `randevular`
-            INNER JOIN `musteriler` ON `randevular`.`musteriID` = `musteriler`.`musteriID`
-            ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC ;";
+    // Geçmiş tarihli kayıtların çekilip çekilmeyeceği
+    if ($prevAppts == false) {
+        $sql = "SELECT `randevular`.`randevuID`, `randevular`.`tarih`, `randevular`.`saat`, `musteriler`.`ad_soyad`
+        FROM `randevular`
+        INNER JOIN `musteriler` ON `randevular`.`musteriID` = `musteriler`.`musteriID`
+        WHERE `randevular`.`tarih` >=`" . date('Y-m-d') . "`
+        ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC ;";
+    } else {
+        $sql = "SELECT `randevular`.`randevuID`, `randevular`.`tarih`, `randevular`.`saat`, `musteriler`.`ad_soyad`
+        FROM `randevular`
+        INNER JOIN `musteriler` ON `randevular`.`musteriID` = `musteriler`.`musteriID`
+        ORDER BY `randevular`.`tarih` ASC, `randevular`.`saat` ASC ;";
+    }
+
     $response = mysqli_query($connection, $sql);
 
     if (!$response) {
@@ -223,6 +233,6 @@ function getAppts($connection)
         exit();
     }
 
-    mysqli_close($connection);
     return $response;
+    mysqli_close($connection);
 }

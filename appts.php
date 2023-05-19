@@ -33,7 +33,7 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
                                                 // Başka birinin randevusu olma durumu
                                                 // Bu durumda tekrar tekrar bulmaca oynamaması için kullanıcıya tüm randevuların tarihleri
                                                 // için ayrıca bir buton sunulur.
-                                                if ($_GET["error"] == "appttaken") { 
+                                                if ($_GET["error"] == "appttaken") {
                                                     echo '<div class="bg-danger text-center fw-bold p-3">
                                                     <p class="fs-2 mb-1 text-light"><i class="bi bi-x-circle-fill"></i> Bu tarihte başka randevu bulunmakta. </p>
                                                     <button class="btn btn-light btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Dolu Randevuları Göster</button><br>
@@ -71,7 +71,7 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
                                             }
                                             // Görüntüleyen yönetici ise tüm randevular yazdırılır
                                             else if (isset($_SESSION["adminID"])) {
-                                                $response = getAppts($connection);
+                                                $response = getAppts($connection, true);
                                                 $data = mysqli_fetch_assoc($response);
                                                 if (!$data) {
                                                     echo '<tr><td class="p-3 text-dark fw-bold fs-4" colspan="4">Herhangi bir veri bulunmamakta.</td></tr>';
@@ -118,24 +118,24 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
             </div>
             <div class="modal-body">
                 <table class="table table-striped mb-0">
-                        <!-- Tablo -->
-                        <?php
-                        $response = getAppts($connection);
-                        $data = mysqli_fetch_assoc($response);
-                        if (!$data) {
-                            echo '<tr><td class="p-3 text-dark fw-bold fs-4" colspan="4">Herhangi bir veri bulunmamakta.</td></tr>';
-                        } else {
-                            while ($data) {
-                                // Geçmiş tarihler görüntülenmez
-                                if($data["tarih"] >= date('Y-m-d')&&$data["saat"] > $TR_Time ){
-                                    echo '<tr>
+                    <!-- Tablo -->
+                    <?php
+                    if(isset($_SESSION["userID"])){
+                        $cevap = getAppts($connection, false);
+                    } else if(isset($_SESSION["adminID"])){
+                        $cevap = getAppts($connection, true);
+                    }
+                    if (mysqli_num_rows($cevap) == 0) {
+                        echo '<tr><td class="p-3 text-dark fw-bold fs-4" colspan="4">Herhangi bir veri bulunmamakta.</td></tr>';
+                    } else {
+                        while ($data = mysqli_fetch_assoc($cevap)) {
+                            echo '<tr>
                                     <td class="p-3">' . $data["tarih"] . '</td>
-                                    <td class="p-3">' . $data["saat"] . '</td>';
-                                }
-                                $data = mysqli_fetch_assoc($response);
-                            }
+                                    <td class="p-3">' . $data["saat"] . '</td>
+                                </tr>';
                         }
-                        ?>
+                    }
+                    ?>
                 </table>
             </div>
             <div class="modal-footer">
