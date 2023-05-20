@@ -11,3 +11,5 @@ $connection = mysqli_connect($hostname,$username,$password,$db);
 if(!$connection){
     die('MySQL sunucu ile baglanti kurulamadi! <br>HATA: ' . mysqli_connect_error());
 }
+
+mysqli_set_charset($connection,'utf-8');
