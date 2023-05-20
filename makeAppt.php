@@ -9,16 +9,23 @@ if (!(isset($_SESSION["userID"]) || isset($_SESSION["adminID"]))) {
 ?>
 
 <style>
+    .background {
+        background-color: #654236;
+        background-image: url('./imgs/barber-bg.webp');
+        background-size: cover;
+        background-position: center center;
+    }
+
     .bg-blur {
-        background: rgba(1, 1, 1, .1);
-        backdrop-filter: blur(25px);
-        border: 2px solid rgba(255, 255, 255, 0.05);
-        background-clip: padding-box;
-        box-shadow: 10px 10px 10px rgba(46, 54, 68, 0.03);
+        background: rgba(0, 0, 0, 0.25);
+        box-shadow: 0 8px 32px 0 rgba(180, 180, 180, 0.39);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: medium solid rgba(180, 180, 180, 0.39);
     }
 </style>
 
-<section class="vh-100" style="background: url(https://images.unsplash.com/photo-1621605815971-fbc98d665033?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3270&q=80)">
+<section class="vh-100 background">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="bg-blur col col-10 col-lg-6 text-center card p-5 rounded-5">

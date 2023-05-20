@@ -98,7 +98,7 @@ if(isset($_SESSION["userID"])||isset($_SESSION["adminID"])){
         </div>
 
         <div class="col-lg-6 mb-5 mb-lg-0">
-            <img src="https://images.unsplash.com/photo-1635273051427-7c2a35ce50ce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80" class="w-100 rounded-4 shadow-4 barber-img" alt="" />
+            <img src="./imgs/barber-signup.webp" class="w-100 rounded-4 shadow-4 barber-img" alt="" />
         </div>
     </div>
 </div>
