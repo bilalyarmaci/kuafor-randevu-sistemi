@@ -5,6 +5,10 @@ if(!isset($_POST["email"])){
     header("Location: ../signup.php");
     exit();
 }
+if (isset($_SESSION["userID"])||isset($_SESSION["adminID"])) {
+    header("Location: ../index.php");
+    exit();
+}
 
 $uName = $_POST["name"];
 $uSurname = $_POST["surname"];
