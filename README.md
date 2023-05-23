@@ -19,7 +19,7 @@ Bu proje, **PHP** ve **MySQL** kullanılarak geliştirilmiş bir kuaför randevu
 
 ## Kurulum
 
-1. Bu depoyu XAMPP dosyalarının içindeki ***htdocs*** dizinine giderek klonlayın: `git clone git@github.com:bilalyarmaci/kuafor-randevu-sistemi.git`
+1. Bu depoyu XAMPP dosyalarının içindeki ***htdocs*** dizinine giderek klonlayın: <br> `git clone git@github.com:bilalyarmaci/kuafor-randevu-sistemi.git`
 2. XAMPP platformundan *Apache Web Server* ve *MySQL Database*'i çalıştırın.
 3. *sqlDatabase.sql* dosyasındaki MySQL sorgusunu kopyalayın.
 4. Tarayıcınızda `localhost/phpmyadmin` adresine gidin.
