@@ -3,7 +3,7 @@
 $hostname = 'localhost';
 $username = 'root';
 $password = '';
-$db = 'admin_panel';
+$db = 'kuafor_vt';
 
 $connection = mysqli_connect($hostname,$username,$password,$db);
 
