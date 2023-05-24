@@ -2,7 +2,8 @@
 
 Bu proje, **PHP** ve **MySQL** kullanılarak geliştirilmiş bir kuaför randevu sistemi örneğidir. Sistem, kullanıcıların giriş yapıp/kaydolup randevu almasına, randevuları görüntülemesine ve yönetmesine olanak sağlar.
 
-<img width="480" alt="website homepage" src="https://github.com/bilalyarmaci/kuafor-randevu-sistemi/assets/92362207/7e4e822b-b775-4f10-8542-c4ccd2fea6bc">
+<img width="480" alt="site homepage" src="https://github.com/bilalyarmaci/kuafor-randevu-sistemi/assets/92362207/8d325d3d-1c10-44e7-9162-588d19821ef6">
+
 
 #### Siteye ulaşmak için <a href="https://kuafor-randevu-sistemi.great-site.net/">tıklayın</a>.
 
@@ -39,4 +40,4 @@ Bu proje, **PHP** ve **MySQL** kullanılarak geliştirilmiş bir kuaför randevu
 Eğer herhangi bir sorunuz, öneriniz veya geri bildiriminiz varsa, lütfen iletişime geçmekten çekinmeyin. İletişim bilgilerimi aşağıda bulabilirsiniz:
 
 -   LinkedIn: [Bilyal Yarmadzha](https://www.linkedin.com/in/bilyal-yarmadzha-1915801a0/)
--   E-posta: [bilal.yarmaci.edu@gmail.com](mailto:bilal.yarmaci.edu+kuaforRandevuSistemiGitHub@gmail.com)
+-   E-posta: [Gmail](mailto:bilal.yarmaci.edu+kuaforRandevuSistemiGitHub@gmail.com)
