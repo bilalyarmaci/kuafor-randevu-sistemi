@@ -55,7 +55,7 @@ if (isset($_SESSION["userID"]) || isset($_SESSION["adminID"])) {
                                     </div>
 
                                     <div class="container d-grid gap-3 pt-1 mb-4 d-md-block">
-                                        <button class="btn btn-outline-dark btn-lg order-last me-md-3" onclick="window.location.href='./index.php'">Geri</button>
+                                        <a class="btn btn-outline-dark btn-lg order-last me-md-3" href="./index.php">Geri</a>
                                         <button class="btn btn-dark btn-lg" type="submit" name="submit">Giriş Yap</button>
                                     </div>
 
