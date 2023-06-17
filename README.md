@@ -1,6 +1,7 @@
 # Kuaför Randevu Sistemi
 
 Bu proje, **PHP** ve **MySQL** kullanılarak geliştirilmiş bir kuaför randevu sistemi örneğidir. Sistem, kullanıcıların giriş yapıp/kaydolup randevu almasına, randevuları görüntülemesine ve yönetmesine olanak sağlar.
+### <a href="https://www.youtube.com/watch?v=Qwa_gG1A7Kw">Tanıtım videosu</a>.
 
 <div align="center"><img width="480" alt="site homepage" src="https://github.com/bilalyarmaci/kuafor-randevu-sistemi/assets/92362207/8d325d3d-1c10-44e7-9162-588d19821ef6"></div>
 
